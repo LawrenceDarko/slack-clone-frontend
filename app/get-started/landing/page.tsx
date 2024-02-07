@@ -40,7 +40,7 @@ const WorkspacesPage = () => {
         <div className="flex items-center">
           <p className="font-bold">Open a workspace</p>
         </div>
-        <div className="flex justify-center w-full p-4">
+        <div className="flex justify-center w-full p-4 pb-20">
           <WorkspacesCard modalState={showWorkspaceModal}/>
         </div>
         

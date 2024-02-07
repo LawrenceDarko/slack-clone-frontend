@@ -6,9 +6,11 @@ import { IoMdSend } from "react-icons/io";
 import RoomNav from "@/app/components/navbars/RoomNav";
 import { useParams } from 'next/navigation';
 import { useAuthContext } from "@/app/context/AuthContext";
+import { useGeneralContext } from '@/app/context/GeneralContext';
 import { axiosPrivate } from '@/app/hooks/axios';
 import { io } from "socket.io-client";
 import TextEditor from '@/app/components/TextEditor';
+
 
 
 
@@ -17,6 +19,7 @@ const RoomPage = () => {
     const socket = useRef(io("ws://localhost:8000")) as any
 
     const { user } = useAuthContext()
+    const { setAddPeopleModal } = useGeneralContext()
     const [messages, setMessages] = useState([]) as any
     const [newMessage, setNewMessage] = useState("")
     const [friendInfo, setFriendInfo] = useState() as any
@@ -54,6 +57,7 @@ const RoomPage = () => {
     const getAllMessagesBelongingToAChat = async() => {
 
         try {
+            // directChatIdOrChannelId is the same as the space_id for the direcChat
             const response = await axiosPrivate.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/direct-chat/${directChatIdOrChannelId}`, {
             withCredentials: true,
             signal: controller.signal
@@ -70,6 +74,7 @@ const RoomPage = () => {
     const getAllMessagesBelongingToAChannel = async() => {
 
         try {
+            // directChatIdOrChannelId is the same as the space_id for the channel
             const response = await axiosPrivate.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/channels/messages/${directChatIdOrChannelId}`, {
             withCredentials: true,
             signal: controller.signal
@@ -202,8 +207,13 @@ const RoomPage = () => {
                     <div className="px-3">
                         <p>{`This conversation is just between @${friendInfo?.username}. and you. Check out their profile to learn more about them.`}</p>
                     </div>
-                    <div className="flex px-3">
-                        <div className="flex px-3 py-2 text-sm hover:bg-[#F8F8F8] border border-gray-400 rounded-[5px]">
+                    <div className="flex gap-3 px-3">
+                        {directChatIdOrChannelId.startsWith('CH') &&
+                        <div onClick={()=>setAddPeopleModal(true)} className="flex px-3 py-2 text-sm hover:bg-[#F8F8F8] dark:hover:bg-transparent border border-gray-400 rounded-[5px] cursor-pointer">
+                            <p>Add Coworkers</p>
+                        </div>
+                        }
+                        <div className="flex dark:hover:bg-transparent cursor-pointer px-3 py-2 text-sm hover:bg-[#F8F8F8] border border-gray-400 rounded-[5px]">
                             <p>View Profile</p>
                         </div>
                     </div>
@@ -213,8 +223,20 @@ const RoomPage = () => {
                                 const createdAtDate = new Date(message?.createdAt);
                                 const options: any = { hour: '2-digit', minute: '2-digit' };
                                 const formattedTime = createdAtDate.toLocaleTimeString(undefined, options);
+                                const formattedDate = createdAtDate.toDateString();
+
+                                // Check if it's a new day
+                                const isNewDay = i === 0 || formattedDate !== new Date(messages[i - 1].createdAt).toDateString();
 
                                 return (
+                                    <>
+                                    {isNewDay && (
+                                        <div className="w-full relative flex justify-center dark:border-gray-600 items-center mb-2 text-center border-t-[1px] border-gray-200">
+                                            <span className="absolute font-semibold p-2 -bottom-[14px] text-xs rounded-3xl border bg-white dark:border-gray-600 dark:bg-[var(--dark-theme-bg-color)] border-gray-200">
+                                                {formattedDate}
+                                            </span>
+                                        </div>
+                                    )}
                                     <div ref={i === messages.length - 1 ? lastMessageRef : null} key={i} className='flex items-start justify-start w-full gap-2 p-2 hover:bg-[#F8F8F8] dark:hover:bg-[#222529]'>
                                         <div className='w-12 h-12 rounded-md flex-[0.04]'>
                                             <BiSolidUserRectangle className="w-full h-full text-gray-900 dark:bg-[#350D36] dark:text-white"/>
@@ -224,6 +246,7 @@ const RoomPage = () => {
                                             <p className='font-normal text-[15px] text-[#5F5F5F]'>{message?.message_body}</p>
                                         </div>
                                     </div>
+                                    </>
                                 );
                             })}
                             

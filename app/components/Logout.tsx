@@ -26,7 +26,7 @@ const Logout = () => {
     }
 
     return (
-        <div onClick={handleLogout} className='absolute cursor-pointer left-7 bottom-14'>Logout</div>
+        <div onClick={handleLogout} className='absolute text-white cursor-pointer left-7 bottom-14'>Logout</div>
     )
 }
 

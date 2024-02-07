@@ -17,6 +17,8 @@ interface GeneralContextType {
     setShowInviteModal: (value: boolean) => void;
     showWorkspaceModal: boolean;
     setShowWorkspaceModal: (value: boolean) => void;
+    addPeopleModal: boolean;
+    setAddPeopleModal: (value: boolean) => void;
     
 }
 
@@ -35,6 +37,7 @@ export const GeneralContextProvider: React.FC<GeneralContextProviderProps> = ({ 
     const [showModal, setShowModal] = useState(false);
     const [showInviteModal, setShowInviteModal] = useState<any>(false)
     const [showWorkspaceModal, setShowWorkspaceModal] = useState(false)
+    const [addPeopleModal, setAddPeopleModal] = useState(false)
 
     const [channelList, setChannelList] = useState<any>([])
     const [worksapceUsers, setWorksapceUsers] = useState([])
@@ -47,7 +50,13 @@ export const GeneralContextProvider: React.FC<GeneralContextProviderProps> = ({ 
             // console.log("WS ID", workspaceId)
             const response = await axiosInstance.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/channels/workspace-channels/${workspaceId}`)
             const responseData = response?.data
-            setChannelList(responseData?.data)
+
+            // Filter channels where members array contains userId
+            const filteredChannels = responseData?.data.filter((channel: any) => channel.members.includes(user.id))
+
+            // Set the filtered channel list
+            setChannelList(filteredChannels)
+
             // getWorkspaceChannels()
             // console.log("CHANNELS:", responseData?.data)
             }
@@ -89,7 +98,9 @@ export const GeneralContextProvider: React.FC<GeneralContextProviderProps> = ({ 
             showInviteModal,
             setShowInviteModal,
             showWorkspaceModal,
-            setShowWorkspaceModal
+            setShowWorkspaceModal,
+            addPeopleModal,
+            setAddPeopleModal
         }}>
         {children}
         </GeneralContext.Provider>

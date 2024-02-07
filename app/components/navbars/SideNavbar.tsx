@@ -9,7 +9,9 @@ import { BiDotsVerticalRounded } from "react-icons/bi";
 import { PiRocketLaunchLight } from "react-icons/pi";
 import { BiSolidUserRectangle } from "react-icons/bi";
 import { RiArrowDownSFill, RiArrowRightSFill } from "react-icons/ri";
+import { SlLock } from "react-icons/sl";
 import { GoStack } from "react-icons/go";
+
 import Link from 'next/link';
 import { usePathname } from "next/navigation";
 import { useParams } from "next/navigation";
@@ -20,6 +22,7 @@ import useAxiosPrivate from '@/app/hooks/useAxiosPrivate';
 import MenuItem from './MenuItem';
 import { useGeneralContext } from '@/app/context/GeneralContext';
 import Logout from '../Logout';
+import { BsHash } from 'react-icons/bs';
 
 interface LinkProp {
     href: string;
@@ -224,7 +227,7 @@ const SideNavbar = () => {
                             {channelList?.map((item: any, index: number) => (
                             <li onClick={()=>handleChannelClick(item.space_id)} key={index} className={`relative block cursor-pointer ${pathname === item.href ? 'bg-[#1164A3]' : ''} hover:bg-[#4D2A51] dark:hover:bg-[#323538] rounded-md px-4 py-1`}>
                                 <div className={`flex gap-3 items-center text-[#B5A6B7] ${pathname === item.href ? "text-white hover:text-lightBlue-600" : "text-blueGray-700 hover:text-blueGray-500"}`}>
-                                    <p>#</p>
+                                    <p>{item.access_type === 'private' ? <SlLock /> : <BsHash />}</p>
                                     <p className='text-[min(1vw)]'>{(item.name).toLowerCase()}</p>
                                 </div>
                             </li>

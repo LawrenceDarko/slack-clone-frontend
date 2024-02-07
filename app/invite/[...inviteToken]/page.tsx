@@ -124,8 +124,8 @@ const InvitePage = () => {
                 <div className="w-40 h-16 mb-20">
                     <img src="/images/logo.png" className="object-contain" alt="Logo" />
                 </div>
-                <div className="flex items-center justify-center w-[65%] gap-5 md:flex-col">
-                    <h1 className='text-4xl font-bold tracking-wide'>Join <span className='text-[#3F0E40]'>New Workpace</span> on Slack</h1>
+                <div className="flex items-center justify-center w-[65%] gap-5 flex-col">
+                    <h1 className='text-4xl font-bold tracking-wide text-center'>Join <span className='text-[#3F0E40]'>New Workpace</span> on Slack</h1>
                     <p>Slack is a messaging app that brings your whole team together</p>
                     {/* <div className="absolute -bottom-[30px] left-[47.5%] rounded-full bg-white p-6">OR</div> */}
                 </div>
