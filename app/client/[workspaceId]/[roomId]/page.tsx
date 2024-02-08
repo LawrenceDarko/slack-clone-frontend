@@ -16,7 +16,7 @@ import TextEditor from '@/app/components/TextEditor';
 
 const RoomPage = () => {
     const params = useParams()
-    const socket = useRef(io("ws://localhost:8000")) as any
+    const socket = useRef(io(`${process.env.NEXT_PUBLIC_SOCKET_URL}`)) as any
 
     const { user } = useAuthContext()
     const { setAddPeopleModal } = useGeneralContext()
