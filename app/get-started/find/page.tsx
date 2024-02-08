@@ -25,6 +25,20 @@ const Page = () => {
 
     // console.log(user)
 
+    const setCookies = async(userData: any) => { 
+        try {
+            const response = await fetch('/api/get-cookies', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json', // Set appropriate headers
+                },
+                body: JSON.stringify({ token: userData.accessToken }), // Customize the data
+            });
+        } catch (error) {
+            
+        }
+    }
+
     const handleFormSubmit = async (data: FieldValues) => {
             // "Authorization": `Bearer ${Cookies.get('refreshToken')}`
         try {
@@ -38,6 +52,7 @@ const Page = () => {
             if(resData?.status === 'success'){
                 const userdata = localStorage.setItem('userData', JSON.stringify(resData.data))
                 dispatch({type: 'LOGIN', payload: resData.data})
+                await setCookies(resData.data)
                 router.push('/get-started/landing')
             }
         } catch (error: any) {
